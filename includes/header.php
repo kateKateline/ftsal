@@ -22,6 +22,7 @@
                 <a href="index.php" class="text-gray-700 hover:text-blue-600">Beranda</a>
                 <a href="lapangan.php" class="text-gray-700 hover:text-blue-600">Lapangan</a>
                 <a href="sewa.php" class="text-gray-700 hover:text-blue-600">sewa</a>
+                <a href="dashboard.php" class="text-gray-700 hover:text-blue-600">Dashboard</a>
                 <a href="logout.php" class="text-gray-700 hover:text-blue-600">test</a>
             </div>
 

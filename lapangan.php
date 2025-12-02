@@ -74,11 +74,6 @@ while ($row = mysqli_fetch_assoc($res)) {
                 </div>
             <?php endforeach; ?>
         </div>
-
-        <div class="mt-8">
-            <a href="my_bookings.php" class="text-blue-600 underline">Lihat Booking Saya</a>
-        </div>
-
     </div>
 </main>
 

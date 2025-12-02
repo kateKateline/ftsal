@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 27 Nov 2025 pada 17.16
+-- Waktu pembuatan: 02 Des 2025 pada 18.03
 -- Versi server: 10.4.32-MariaDB
 -- Versi PHP: 8.2.12
 
@@ -48,10 +48,14 @@ INSERT INTO `booking` (`id`, `user_id`, `lapangan_id`, `tanggal`, `jam_mulai`, `
 (2, 1, 1, '2025-11-28', '20:00:00', '22:00:00', 240000, 'canceled', '2025-11-27 10:39:25'),
 (3, 1, 1, '2025-11-29', '17:40:00', '21:19:00', 438000, 'canceled', '2025-11-27 10:41:06'),
 (4, 2, 1, '2025-11-28', '09:58:00', '11:28:00', 180000, 'canceled', '2025-11-27 11:38:37'),
-(5, 2, 1, '2025-11-27', '09:00:00', '10:00:00', 120000, 'pending', '2025-11-27 11:43:21'),
+(5, 2, 1, '2025-11-27', '09:00:00', '10:00:00', 120000, 'confirmed', '2025-11-27 11:43:21'),
 (6, 1, 1, '2025-11-30', '09:00:00', '11:00:00', 240000, 'pending', '2025-11-27 11:49:06'),
 (7, 1, 2, '2025-11-27', '07:00:00', '11:00:00', 400000, 'pending', '2025-11-27 11:49:34'),
-(8, 1, 1, '2025-11-28', '09:00:00', '13:00:00', 480000, 'pending', '2025-11-27 12:08:26');
+(8, 1, 1, '2025-11-28', '09:00:00', '13:00:00', 480000, 'pending', '2025-11-27 12:08:26'),
+(9, 1, 2, '2025-12-05', '09:00:00', '11:00:00', 200000, 'confirmed', '2025-12-02 16:27:20'),
+(10, 2, 1, '2025-12-18', '09:00:00', '10:30:00', 180000, 'pending', '2025-12-02 16:33:21'),
+(11, 2, 1, '2025-12-05', '09:00:00', '10:00:00', 120000, 'pending', '2025-12-02 16:54:53'),
+(12, 1, 1, '2025-12-13', '09:00:00', '10:00:00', 120000, 'pending', '2025-12-02 16:59:20');
 
 -- --------------------------------------------------------
 
@@ -99,11 +103,11 @@ CREATE TABLE `sewa_peralatan` (
 --
 
 INSERT INTO `sewa_peralatan` (`id`, `nama_peralatan`, `stok`, `harga_sewa`, `satuan`, `status`, `gambar`) VALUES
-(1, 'Bola Futsal Standar', 6, 5000, 'buah', 'tersedia', 'bola_futsal.jpg'),
+(1, 'Bola Futsal Standar', 3, 5000, 'buah', 'tersedia', 'bola_futsal.jpg'),
 (2, 'Gawang Portable Kecil', 0, 25000, 'unit', 'tersedia', 'gawang_kecil.jpg'),
 (3, 'Rompi Tim Merah', 20, 1000, 'unit', 'tersedia', 'rompi_merah.jpg'),
 (4, 'Rompi Tim Biru', 20, 1000, 'unit', 'tersedia', 'rompi_biru.jpg'),
-(5, 'Kerucut Penanda (Cone)', 29, 500, 'unit', 'tersedia', 'kerucut.jpg'),
+(5, 'Kerucut Penanda (Cone)', 28, 500, 'unit', 'tersedia', 'kerucut.jpg'),
 (6, 'Set Pelindung Shin Guard', 5, 8000, 'set', 'tersedia', 'shin_guard.jpg');
 
 -- --------------------------------------------------------
@@ -135,7 +139,9 @@ INSERT INTO `sewa_peralatan_detail` (`id`, `user_id`, `booking_id`, `peralatan_i
 (3, 1, 7, 1, 1, '2025-11-27', '2025-11-27', 5000, 'pending', '2025-11-27 16:00:05'),
 (4, 1, 7, 1, 1, '2025-11-27', '2025-11-27', 5000, 'pending', '2025-11-27 16:00:12'),
 (5, 1, 6, 5, 1, '2025-11-27', '2025-11-27', 500, 'pending', '2025-11-27 16:01:13'),
-(6, 1, 7, 1, 1, '2025-11-27', '2025-11-27', 5000, 'pending', '2025-11-27 16:08:47');
+(6, 1, 7, 1, 1, '2025-11-27', '2025-11-27', 5000, 'pending', '2025-11-27 16:08:47'),
+(7, 2, 10, 1, 3, '2025-12-18', '2025-12-18', 15000, 'pending', '2025-12-02 16:42:48'),
+(8, 1, 9, 5, 1, '2025-12-05', '2025-12-05', 500, 'pending', '2025-12-02 17:02:12');
 
 -- --------------------------------------------------------
 
@@ -204,7 +210,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `booking`
 --
 ALTER TABLE `booking`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT untuk tabel `lapangan`
@@ -222,7 +228,7 @@ ALTER TABLE `sewa_peralatan`
 -- AUTO_INCREMENT untuk tabel `sewa_peralatan_detail`
 --
 ALTER TABLE `sewa_peralatan_detail`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`

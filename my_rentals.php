@@ -16,7 +16,8 @@ $sql = "SELECT sp.id, sp.nama_peralatan, spd.quantity, spd.tanggal_sewa, spd.tan
         FROM sewa_peralatan_detail spd
         JOIN sewa_peralatan sp ON spd.peralatan_id = sp.id
         WHERE spd.user_id = $user_id
-        ORDER BY spd.created_at DESC";
+        ORDER BY spd.tanggal_transaksi DESC";
+
 $res = mysqli_query($conn, $sql);
 $rentals = [];
 if ($res) {
@@ -25,22 +26,36 @@ if ($res) {
     }
 }
 
+// Calculate total for pending rentals
+$total_pending = 0;
+$has_pending = false;
+foreach ($rentals as $r) {
+    if ($r['status'] === 'pending') {
+        $total_pending += $r['total_harga'];
+        $has_pending = true;
+    }
+}
+
 ?>
 
-<main class="min-h-screen bg-gray-50 py-8">
+<main class="min-h-screen bg-gradient-to-br from-green-50 to-teal-100 py-8">
     <div class="max-w-6xl mx-auto px-4">
 
         <?php if ($msg): ?>
-            <div class="mb-6 bg-green-100 text-green-800 p-3 rounded">
+            <div class="mb-6 bg-green-100 text-green-800 p-4 rounded-lg shadow">
                 <?= $msg ?>
             </div>
         <?php endif; ?>
 
-        <div class="mb-6">
-            <a href="sewa.php" class="text-blue-600 hover:underline">&larr; Kembali ke Sewa Peralatan</a>
+        <div class="mb-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">Riwayat Penyewaan Peralatan</h1>
+                    <p class="text-gray-600">Kelola penyewaan peralatan Anda</p>
+                </div>
+                <a href="dashboard.php" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200">Kembali ke Dashboard</a>
+            </div>
         </div>
-
-        <h1 class="text-2xl font-bold mb-4">Riwayat Penyewaan Peralatan</h1>
 
         <?php if (count($rentals) > 0): ?>
             <div class="bg-white rounded-lg shadow overflow-x-auto">
@@ -75,6 +90,7 @@ if ($res) {
                                 </td>
                                 <td class="px-6 py-4 text-sm">
                                     <?php if ($r['status'] === 'pending'): ?>
+                                        <a href="process_sewa.php?action=pay&id=<?= intval($r['id']) ?>" class="text-green-600 hover:text-green-800 text-xs mr-2" onclick="return confirm('Konfirmasi pembayaran penyewaan ini?')">Bayar</a>
                                         <a href="process_sewa.php?action=cancel&id=<?= intval($r['id']) ?>" class="text-red-600 hover:text-red-800 text-xs" onclick="return confirm('Batalkan penyewaan ini?')">Batalkan</a>
                                     <?php else: ?>
                                         <span class="text-gray-400 text-xs">-</span>
@@ -88,6 +104,14 @@ if ($res) {
         <?php else: ?>
             <div class="bg-white rounded-lg shadow p-6 text-center text-gray-600">
                 <p>Anda belum memiliki penyewaan. <a href="sewa.php" class="text-blue-600 hover:underline">Mulai sewa peralatan sekarang</a></p>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($has_pending): ?>
+            <div class="mt-6 bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold mb-4">Bayar Semua Penyewaan Pending</h2>
+                <p class="text-gray-700 mb-4">Total pembayaran untuk semua penyewaan pending: <span class="font-semibold text-green-600"><?= format_rupiah($total_pending) ?></span></p>
+                <a href="process_sewa.php?action=pay_all" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700" onclick="return confirm('Konfirmasi pembayaran semua penyewaan pending?')">Bayar Semua</a>
             </div>
         <?php endif; ?>
 

@@ -13,7 +13,7 @@ $peralatan_list = get_all_peralatan($conn);
 // Ambil booking user (Diperlukan di dalam modal untuk dropdown)
 $my_bookings = [];
 if (is_logged_in()) {
-    $user_id = intval($_SESSION['user']['id']);
+    $user_id = intval($_SESSION['user']['id']); // <<< BARIS 16 (Sudah Diperbaiki)
     // Filter booking yang statusnya 'confirmed' ATAU 'pending' dan belum terlewat
     $today = date('Y-m-d');
     $sql_booking = "SELECT id, tanggal, jam_mulai, jam_selesai, status 
@@ -23,6 +23,8 @@ if (is_logged_in()) {
     $res_booking = mysqli_query($conn, $sql_booking);
     if ($res_booking) {
         while ($b = mysqli_fetch_assoc($res_booking)) {
+            // Tambahkan tanggal ke array booking untuk digunakan di JS (penting!)
+            $b['tanggal'] = date('Y-m-d', strtotime($b['tanggal']));
             $my_bookings[] = $b;
         }
     }
@@ -92,11 +94,6 @@ $error = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
                 </div>
             <?php endforeach; ?>
         </div>
-
-        <div class="mt-8">
-            <a href="my_rentals.php" class="text-blue-600 underline">Lihat Sewa Saya</a>
-        </div>
-
     </div>
 </main>
 
@@ -114,8 +111,9 @@ $error = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
 </div>
 
 <script>
+    // MY_BOOKINGS sekarang berisi array objek booking, termasuk 'tanggal'
     const MY_BOOKINGS = <?= json_encode($my_bookings) ?>;
-
+    
     function formatRupiah(number) {
         return new Intl.NumberFormat('id-ID').format(number);
     }
@@ -160,7 +158,7 @@ $error = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
                 }
                 
                 if (MY_BOOKINGS.length === 0) {
-                     const html = `<div class="bg-yellow-50 p-4 rounded text-sm text-yellow-800">Anda tidak memiliki booking lapangan yang sedang **Pending** atau **Confirmed** dan belum terlewat. Sewa peralatan memerlukan booking lapangan terlebih dahulu.</div>`;
+                     const html = `<div class="bg-yellow-50 p-4 rounded text-sm text-yellow-800">Anda tidak memiliki booking lapangan yang sedang **Pending** atau **Confirmed** dan belum terlewat. Sewa peralatan terikat pada booking lapangan.</div>`;
                     modalTitle.textContent = 'Booking Diperlukan';
                     openModal(html);
                     return;
@@ -171,23 +169,28 @@ $error = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
                 // Build the booking options
                 const bookingOptions = MY_BOOKINGS.map(b => {
                     const statusStyle = b.status === 'pending' ? ' (PENDING)' : ' (CONFIRMED)';
-                    return `<option value="${b.id}">Booking #${b.id} - ${b.tanggal} (${b.jam_mulai} - ${b.jam_selesai})${statusStyle}</option>`;
+                    // Tambahkan data tanggal ke option
+                    return `<option value="${b.id}" data-tanggal="${b.tanggal}">Booking #${b.id} - ${b.tanggal} (${b.jam_mulai} - ${b.jam_selesai})${statusStyle}</option>`;
                 }).join('');
 
 
-                const today = new Date().toISOString().split('T')[0];
+                // Dapatkan tanggal booking pertama sebagai default
+                const defaultBookingDate = MY_BOOKINGS.length > 0 ? MY_BOOKINGS[0].tanggal : '';
 
                 const formHtml = `
                     <form id="rentalForm" method="POST" action="process_sewa.php" class="space-y-4">
                         <input type="hidden" name="peralatan_id" value="${id}">
                         <input type="hidden" name="harga_satuan" value="${harga}">
-
+                        
+                        <input type="hidden" id="rental_tanggal_sewa" name="tanggal_sewa" value="${defaultBookingDate}">
+                        <input type="hidden" id="rental_tanggal_kembali" name="tanggal_kembali" value="${defaultBookingDate}">
+                        
                         <div>
-                            <label for="booking_id" class="block text-sm font-medium text-gray-700">Pilih Booking</label>
+                            <label for="booking_id" class="block text-sm font-medium text-gray-700">Pilih Booking Lapangan</label>
                             <select id="booking_id" name="booking_id" class="mt-1 p-2 border border-gray-300 rounded w-full" required>
                                 ${bookingOptions}
                             </select>
-                            <p class="text-xs text-gray-500 mt-1">Sewa peralatan terikat pada booking lapangan Anda (Pending/Confirmed).</p>
+                            <p class="text-xs text-gray-500 mt-1">Tanggal Sewa akan mengikuti tanggal booking yang dipilih: <span id="selectedBookingDate" class="font-semibold text-blue-600">${defaultBookingDate}</span></p>
                         </div>
                         
                         <div>
@@ -195,22 +198,9 @@ $error = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
                             <input type="number" id="quantity" name="quantity" min="1" max="${stok}" value="1" 
                                 class="mt-1 p-2 border border-gray-300 rounded w-full" required>
                         </div>
-
-                        <div>
-                            <label for="tanggal_sewa" class="block text-sm font-medium text-gray-700">Tanggal Sewa</label>
-                            <input type="date" id="tanggal_sewa" name="tanggal_sewa" value="${today}" min="${today}" 
-                                class="mt-1 p-2 border border-gray-300 rounded w-full" required>
-                        </div>
                         
-                        <div>
-                            <label for="tanggal_kembali" class="block text-sm font-medium text-gray-700">Tanggal Kembali</label>
-                            <input type="date" id="tanggal_kembali" name="tanggal_kembali" value="${today}" min="${today}" 
-                                class="mt-1 p-2 border border-gray-300 rounded w-full" required>
-                            <p class="text-xs text-gray-500 mt-1">Penyewaan dihitung harian.</p>
-                        </div>
-
                         <div class="p-3 bg-blue-50 border-l-4 border-blue-400 text-blue-800">
-                            Total Harga: **Rp <span id="totalPrice">0</span>**
+                            Total Harga (per 1 sesi booking): **Rp <span id="totalPrice">0</span>**
                         </div>
 
                         <button type="submit" name="sewa" class="w-full py-2 px-4 bg-green-600 text-white font-semibold rounded hover:bg-green-700 transition">
@@ -221,36 +211,44 @@ $error = isset($_GET['error']) ? htmlspecialchars($_GET['error']) : '';
 
                 openModal(formHtml);
 
-                // Add quantity change handler after form renders
+                // Add change handler after form renders
                 setTimeout(() => {
                     const qtyInput = modalContent.querySelector('input[name="quantity"]');
-                    const tglSewaInput = modalContent.querySelector('input[name="tanggal_sewa"]');
-                    const tglKembaliInput = modalContent.querySelector('input[name="tanggal_kembali"]');
+                    const bookingSelect = modalContent.querySelector('select[name="booking_id"]');
                     const totalSpan = modalContent.querySelector('#totalPrice');
-                    
-                    function getRentDays() {
-                        const date1 = new Date(tglSewaInput.value);
-                        const date2 = new Date(tglKembaliInput.value);
-                        if (isNaN(date1) || isNaN(date2) || date2 < date1) return 1;
-                        const diffTime = Math.abs(date2 - date1);
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                        return diffDays + 1; 
+                    const selectedBookingDateSpan = modalContent.querySelector('#selectedBookingDate');
+                    const tanggalSewaHidden = modalContent.querySelector('#rental_tanggal_sewa');
+                    const tanggalKembaliHidden = modalContent.querySelector('#rental_tanggal_kembali');
+
+
+                    function updateBookingDate() {
+                        const selectedOption = bookingSelect.options[bookingSelect.selectedIndex];
+                        const selectedDate = selectedOption.getAttribute('data-tanggal');
+
+                        // Update Tampilan
+                        selectedBookingDateSpan.textContent = selectedDate;
+                        
+                        // Update Input Hidden (Ini yang dikirim ke PHP)
+                        tanggalSewaHidden.value = selectedDate;
+                        tanggalKembaliHidden.value = selectedDate; // Asumsi sewa 1 hari/sesi booking
+
+                        updateTotal();
                     }
 
                     function updateTotal() {
+                        // Karena disewa bareng game/booking, kita asumsikan 1 hari sewa (sesuai booking)
                         const qty = parseInt(qtyInput.value) || 0;
-                        const days = getRentDays();
-                        const total = qty * harga * days;
+                        const days = 1; // Disetel menjadi 1 karena terikat dengan 1 sesi booking
+                        const total = qty * harga * days; 
                         totalSpan.textContent = formatRupiah(total);
                     }
 
                     // Event Listeners
                     qtyInput.addEventListener('change', updateTotal);
                     qtyInput.addEventListener('input', updateTotal);
-                    tglSewaInput.addEventListener('change', updateTotal);
-                    tglKembaliInput.addEventListener('change', updateTotal);
+                    bookingSelect.addEventListener('change', updateBookingDate);
 
-                    updateTotal(); // Initial call
+                    updateBookingDate(); // Initial call to set date and total
                 }, 0);
             });
         });
