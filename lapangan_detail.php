@@ -269,10 +269,6 @@ $bookings = get_bookings_for_lapangan($conn, $lapangan_id, $today, $nextWeek);
                             checkTimeConflict();
                         </script>
                     <?php endif; ?>
-
-                    <div class="mt-4 pt-4 border-t">
-                        <a href="my_bookings.php" class="text-sm text-blue-600 hover:underline">Lihat Booking Saya</a>
-                    </div>
                 </div>
             </div>
         </div>
