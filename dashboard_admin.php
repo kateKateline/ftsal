@@ -90,22 +90,29 @@ if (!function_exists('format_rupiah')) {
 
 // Tambahkan atau pastikan helper ini ada di file PHP Anda:
 if (!function_exists('getStatusClass')) {
-    function getStatusClass($status, $type = 'booking') {
+    function getStatusClass($status, $type = 'booking')
+    {
         $status = strtolower($status);
         if ($type === 'master') {
             return $status === 'ready' || $status === 'tersedia' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700';
         }
         switch ($status) {
-            case 'pending': return 'bg-yellow-100 text-yellow-700';
-            case 'confirmed': return 'bg-blue-100 text-blue-700';
-            case 'completed': return 'bg-green-100 text-green-700';
-            case 'admin': return 'bg-red-100 text-red-700';
-            default: return 'bg-gray-100 text-gray-700';
+            case 'pending':
+                return 'bg-yellow-100 text-yellow-700';
+            case 'confirmed':
+                return 'bg-blue-100 text-blue-700';
+            case 'completed':
+                return 'bg-green-100 text-green-700';
+            case 'admin':
+                return 'bg-red-100 text-red-700';
+            default:
+                return 'bg-gray-100 text-gray-700';
         }
     }
 }
 if (!function_exists('format_rupiah')) {
-    function format_rupiah($angka) {
+    function format_rupiah($angka)
+    {
         return 'Rp ' . number_format($angka, 0, ',', '.');
     }
 }
@@ -114,17 +121,54 @@ if (!function_exists('format_rupiah')) {
 <style>
     /* Styling untuk Print/Cetak */
     @media print {
+
         /* Sembunyikan elemen non-data saat mencetak */
-        header, footer, .print-hide, .aksi-column, .nav-menu {
+        header,
+        footer,
+        .print-hide,
+        .aksi-column,
+        .nav-menu {
             display: none !important;
         }
-        body { background-color: #fff !important; color: #000 !important; padding: 0; margin: 0; }
-        .printable-area { display: block !important; position: absolute; left: 0; top: 0; width: 100%; }
-        main { padding: 0 !important; margin: 0 !important; }
+
+        body {
+            background-color: #fff !important;
+            color: #000 !important;
+            padding: 0;
+            margin: 0;
+        }
+
+        .printable-area {
+            display: block !important;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+        }
+
+        main {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
         /* Style tabel untuk cetak */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #000; padding: 6px; text-align: left; font-size: 10px; }
-        th { background-color: #eee; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: left;
+            font-size: 10px;
+        }
+
+        th {
+            background-color: #eee;
+        }
     }
 </style>
 
@@ -133,7 +177,7 @@ if (!function_exists('format_rupiah')) {
 
         <div class="mb-8 print-hide">
             <h1 class="text-3xl font-bold text-blue-500 mb-2">Admin Dashboard</h1>
-            <p class="text-gray-600">Kelola Master Lapangan, Peralatan, dan Pengguna. Monitor Transaksi.</p>
+            <p class="text-gray-600">Kelola  Lapangan, Peralatan, dan Pengguna. Monitor Transaksi.</p>
         </div>
 
         <?php if ($msg): ?>
@@ -141,18 +185,18 @@ if (!function_exists('format_rupiah')) {
                 <?= $msg ?>
             </div>
         <?php endif; ?>
-        
+
         <div class="mb-8 print-hide">
             <div class="border-b border-gray-200">
                 <nav class="-mb-px flex space-x-8" aria-label="Tabs" id="adminTabs">
                     <button data-tab="master_lapangan" class="tab-button py-2 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none border-blue-600 text-blue-600">
-                        Master Lapangan
+                        Lapangan
                     </button>
                     <button data-tab="master_peralatan" class="tab-button py-2 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none">
-                        Master Peralatan
+                        Peralatan
                     </button>
                     <button data-tab="master_users" class="tab-button py-2 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none">
-                        Master Users
+                        Users
                     </button>
                     <button data-tab="all_bookings" class="tab-button py-2 px-1 border-b-2 font-medium text-sm text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none">
                         Laporan Booking
@@ -166,28 +210,28 @@ if (!function_exists('format_rupiah')) {
 
         <div id="master_lapangan" class="tab-content">
             <div class="flex justify-between items-center mb-6 print-hide">
-                <h2 class="text-2xl font-semibold text-gray-800">Master Lapangan</h2>
+                <h2 class="text-2xl font-semibold text-gray-800"> Lapangan</h2>
                 <div>
                     <a href="lapangan_crud.php?action=create" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 print-hide mr-2">
-                        ➕ Tambah Lapangan
+                        Tambah Lapangan
                     </a>
                     <button onclick="printTable('lapanganTable', 'Laporan Master Lapangan')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200 print-hide">
-                        📥 Cetak PDF
+                        Cetak PDF
                     </button>
                 </div>
             </div>
 
             <?php if (!empty($lapangan_data)): ?>
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden printable-area"> 
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden printable-area">
                     <div class="overflow-x-auto">
-                        <table class="w-full" id="lapanganTable"> 
+                        <table class="w-full" id="lapanganTable">
                             <thead class="bg-blue-500 text-white">
                                 <tr>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">ID</th>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Nama Lapangan</th>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Harga/Jam</th>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Status</th>
-                                    <th class="px-6 py-4 text-left text-sm font-semibold aksi-column">Aksi</th> 
+                                    <th class="px-6 py-4 text-left text-sm font-semibold aksi-column">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
@@ -207,7 +251,7 @@ if (!function_exists('format_rupiah')) {
                                             <a href="lapangan_crud.php?action=edit&id=<?= $l['id'] ?>" class="text-indigo-600 hover:text-indigo-800 font-medium mr-3 transition duration-200">
                                                 Edit
                                             </a>
-                                            <a href="process_crud.php?table=lapangan&action=delete&id=<?= $l['id'] ?>" 
+                                            <a href="process_crud.php?table=lapangan&action=delete&id=<?= $l['id'] ?>"
                                                 class="text-red-600 hover:text-red-800 font-medium transition duration-200"
                                                 onclick="return confirm('Yakin ingin menghapus lapangan ini?')">
                                                 Hapus
@@ -225,24 +269,24 @@ if (!function_exists('format_rupiah')) {
                 </div>
             <?php endif; ?>
         </div>
-        
+
         <div id="master_peralatan" class="tab-content hidden">
             <div class="flex justify-between items-center mb-6 print-hide">
-                <h2 class="text-2xl font-semibold text-gray-800">Master Peralatan</h2>
+                <h2 class="text-2xl font-semibold text-gray-800"> Peralatan</h2>
                 <div>
                     <a href="peralatan_crud.php?action=create" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200 print-hide mr-2">
-                        ➕ Tambah Peralatan
+                        Tambah Peralatan
                     </a>
                     <button onclick="printTable('peralatanTable', 'Laporan Master Peralatan')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200 print-hide">
-                        📥 Cetak PDF
+                        Cetak PDF
                     </button>
                 </div>
             </div>
 
             <?php if (!empty($peralatan_data)): ?>
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden printable-area"> 
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden printable-area">
                     <div class="overflow-x-auto">
-                        <table class="w-full" id="peralatanTable"> 
+                        <table class="w-full" id="peralatanTable">
                             <thead class="bg-green-500 text-white">
                                 <tr>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">ID</th>
@@ -250,7 +294,7 @@ if (!function_exists('format_rupiah')) {
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Harga Sewa</th>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Stok</th>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Status</th>
-                                    <th class="px-6 py-4 text-left text-sm font-semibold aksi-column">Aksi</th> 
+                                    <th class="px-6 py-4 text-left text-sm font-semibold aksi-column">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
@@ -271,7 +315,7 @@ if (!function_exists('format_rupiah')) {
                                             <a href="peralatan_crud.php?action=edit&id=<?= $p['id'] ?>" class="text-indigo-600 hover:text-indigo-800 font-medium mr-3 transition duration-200">
                                                 Edit
                                             </a>
-                                            <a href="process_crud.php?table=peralatan&action=delete&id=<?= $p['id'] ?>" 
+                                            <a href="process_crud.php?table=peralatan&action=delete&id=<?= $p['id'] ?>"
                                                 class="text-red-600 hover:text-red-800 font-medium transition duration-200"
                                                 onclick="return confirm('Yakin ingin menghapus peralatan ini?')">
                                                 Hapus
@@ -289,31 +333,31 @@ if (!function_exists('format_rupiah')) {
                 </div>
             <?php endif; ?>
         </div>
-        
+
         <div id="master_users" class="tab-content hidden">
             <div class="flex justify-between items-center mb-6 print-hide">
-                <h2 class="text-2xl font-semibold text-gray-800">Master Pengguna</h2>
+                <h2 class="text-2xl font-semibold text-gray-800"> Pengguna</h2>
                 <div>
                     <a href="users_crud.php?action=create" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition duration-200 print-hide mr-2">
-                        ➕ Tambah Pengguna
+                        Tambah Pengguna
                     </a>
                     <button onclick="printTable('usersTable', 'Laporan Master Pengguna')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200 print-hide">
-                        📥 Cetak PDF
+                        Cetak PDF
                     </button>
                 </div>
             </div>
 
             <?php if (!empty($users_data)): ?>
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden printable-area"> 
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden printable-area">
                     <div class="overflow-x-auto">
-                        <table class="w-full" id="usersTable"> 
+                        <table class="w-full" id="usersTable">
                             <thead class="bg-indigo-500 text-white">
                                 <tr>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">ID</th>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Nama</th>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Email</th>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Role</th>
-                                    <th class="px-6 py-4 text-left text-sm font-semibold aksi-column">Aksi</th> 
+                                    <th class="px-6 py-4 text-left text-sm font-semibold aksi-column">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
@@ -331,7 +375,7 @@ if (!function_exists('format_rupiah')) {
                                             <a href="users_crud.php?action=edit&id=<?= $u['id'] ?>" class="text-indigo-600 hover:text-indigo-800 font-medium mr-3 transition duration-200">
                                                 Edit
                                             </a>
-                                            <a href="process_crud.php?table=users&action=delete&id=<?= $u['id'] ?>" 
+                                            <a href="process_crud.php?table=users&action=delete&id=<?= $u['id'] ?>"
                                                 class="text-red-600 hover:text-red-800 font-medium transition duration-200"
                                                 onclick="return confirm('Yakin ingin menghapus pengguna ini?')">
                                                 Hapus
@@ -354,14 +398,14 @@ if (!function_exists('format_rupiah')) {
             <div class="flex justify-between items-center mb-6 print-hide">
                 <h2 class="text-2xl font-semibold text-gray-800">Laporan Semua Booking Lapangan</h2>
                 <button onclick="printTable('allBookingTable', 'Laporan Semua Booking Lapangan')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200 print-hide">
-                    📥 Cetak PDF
+                    Cetak PDF
                 </button>
             </div>
 
             <?php if (!empty($all_bookings)): ?>
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden printable-area"> 
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden printable-area">
                     <div class="overflow-x-auto">
-                        <table class="w-full" id="allBookingTable"> 
+                        <table class="w-full" id="allBookingTable">
                             <thead class="bg-red-500 text-white">
                                 <tr>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Booking ID</th>
@@ -370,7 +414,7 @@ if (!function_exists('format_rupiah')) {
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Tanggal & Jam</th>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Total</th>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Status</th>
-                                    <th class="px-6 py-4 text-left text-sm font-semibold aksi-column">Aksi</th> 
+                                    <th class="px-6 py-4 text-left text-sm font-semibold aksi-column">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
@@ -381,7 +425,7 @@ if (!function_exists('format_rupiah')) {
                                         <td class="px-6 py-4 text-sm text-gray-700"><?= htmlspecialchars($row['lapangan_nama']) ?></td>
                                         <td class="px-6 py-4 text-sm text-gray-700">
                                             <?= htmlspecialchars($row['tanggal']) ?><br>
-                                            <span class="text-xs"><?= htmlspecialchars(substr($row['jam_mulai'],0,5)) ?> - <?= htmlspecialchars(substr($row['jam_selesai'],0,5)) ?></span>
+                                            <span class="text-xs"><?= htmlspecialchars(substr($row['jam_mulai'], 0, 5)) ?> - <?= htmlspecialchars(substr($row['jam_selesai'], 0, 5)) ?></span>
                                         </td>
                                         <td class="px-6 py-4 text-sm text-gray-700 font-semibold text-red-600">
                                             <?= format_rupiah($row['total_harga']) ?>
@@ -406,19 +450,19 @@ if (!function_exists('format_rupiah')) {
                 </div>
             <?php endif; ?>
         </div>
-        
+
         <div id="all_rentals" class="tab-content hidden">
             <div class="flex justify-between items-center mb-6 print-hide">
                 <h2 class="text-2xl font-semibold text-gray-800">Laporan Semua Penyewaan Peralatan</h2>
                 <button onclick="printTable('allRentalTable', 'Laporan Semua Penyewaan Peralatan')" class="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200 print-hide">
-                    📥 Cetak PDF
+                    Cetak PDF
                 </button>
             </div>
 
             <?php if (!empty($all_rentals)): ?>
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden printable-area"> 
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden printable-area">
                     <div class="overflow-x-auto">
-                        <table class="w-full" id="allRentalTable"> 
+                        <table class="w-full" id="allRentalTable">
                             <thead class="bg-yellow-600 text-white">
                                 <tr>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">ID</th>
@@ -428,7 +472,7 @@ if (!function_exists('format_rupiah')) {
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Tgl Sewa/Kembali</th>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Total</th>
                                     <th class="px-6 py-4 text-left text-sm font-semibold">Status</th>
-                                    <th class="px-6 py-4 text-left text-sm font-semibold aksi-column">Aksi</th> 
+                                    <th class="px-6 py-4 text-left text-sm font-semibold aksi-column">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
@@ -505,21 +549,21 @@ if (!function_exists('format_rupiah')) {
         });
 
         // Aktifkan tab pertama (Master Lapangan) saat halaman dimuat
-        activateTab('master_lapangan'); 
+        activateTab('master_lapangan');
     });
-    
+
     // ============================== JAVASCRIPT UNTUK FUNGSI PRINT ==============================
     function printTable(tableId, title) {
         const originalTitle = document.title;
         // Ambil elemen area cetak (yang membungkus tabel)
         const printableArea = document.getElementById(tableId).closest('.printable-area');
         if (!printableArea) {
-             alert('Area cetak tidak ditemukan.');
-             return;
+            alert('Area cetak tidak ditemukan.');
+            return;
         }
 
         const printContents = printableArea.outerHTML;
-        
+
         // Buat konten HTML baru untuk jendela cetak
         const newHtml = `
             <!DOCTYPE html>
@@ -548,7 +592,7 @@ if (!function_exists('format_rupiah')) {
         printWindow.document.write(newHtml);
         printWindow.document.close();
         printWindow.print();
-        
+
         // Mengembalikan judul halaman setelah mencetak dan menutup jendela cetak
         printWindow.onafterprint = function() {
             printWindow.close();
